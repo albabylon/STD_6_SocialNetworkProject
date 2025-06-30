@@ -1,7 +1,28 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SocialNetworkWebApp.Data;
+using SocialNetworkWebApp.Models.Users;
+
 var builder = WebApplication.CreateBuilder(args);
 
+IConfiguration configuration = builder.Configuration;
+var connection = configuration.GetConnectionString("DefaultConnection");
+
 // Add services to the container.
+builder.Services
+    .AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connection))
+    .AddIdentity<User, IdentityRole>(option => 
+    {
+        option.Password.RequiredLength = 5;
+        option.Password.RequireNonAlphanumeric = false;
+        option.Password.RequireLowercase = false;
+        option.Password.RequireUppercase = false;
+        option.Password.RequireDigit = false;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+
 
 var app = builder.Build();
 
@@ -18,6 +39,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
