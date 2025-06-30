@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkWebApp.Data;
@@ -9,6 +10,13 @@ IConfiguration configuration = builder.Configuration;
 var connection = configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
+var mapperConfig = new MapperConfiguration((v) =>
+{
+    v.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 builder.Services
     .AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connection))
     .AddIdentity<User, IdentityRole>(option => 
@@ -20,6 +28,7 @@ builder.Services
         option.Password.RequireDigit = false;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 
