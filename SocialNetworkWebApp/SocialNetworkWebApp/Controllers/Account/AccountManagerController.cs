@@ -26,6 +26,12 @@ namespace SocialNetworkWebApp.Controllers.Account
             return View("Home/Login");
         }
 
+        [HttpGet]
+        public IActionResult Login(string? returnUrl = null)
+        {
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
+        }
+
         [Route("Login")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -33,7 +39,14 @@ namespace SocialNetworkWebApp.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var user = _mapper.Map<User>(model);
+                //var user = _mapper.Map<User>(model);
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "Пользователь не найден");
+                    return View("Views/Home/Index.cshtml");
+                }
 
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
@@ -52,7 +65,7 @@ namespace SocialNetworkWebApp.Controllers.Account
                     ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                 }
             }
-            return View("Views/Home/Index.cshtml");
+            return View("Views/Home/Index");
         }
 
         [Route("Logout")]
