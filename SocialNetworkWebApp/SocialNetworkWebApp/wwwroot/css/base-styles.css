@@ -1,6 +1,9 @@
 ﻿
 .topnav {
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
 }
 
     .topnav a {
@@ -24,6 +27,21 @@
         }
 
     .topnav .search-container {
+        float: right;
+    }
+
+    .navbar-nav {
+        float: right;
+    }
+
+    .topnav .btn-logout {
+        background-color: #5181b8;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
         float: right;
     }
 

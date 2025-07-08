@@ -40,8 +40,8 @@ namespace SocialNetworkWebApp.Controllers.Account
             if (ModelState.IsValid)
             {
                 //var user = _mapper.Map<User>(model);
-
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                var normalizedEmail = _userManager.NormalizeEmail(model.Email);
+                var user = await _userManager.FindByEmailAsync(normalizedEmail);
                 if (user == null)
                 {
                     ModelState.AddModelError("", "Пользователь не найден");
