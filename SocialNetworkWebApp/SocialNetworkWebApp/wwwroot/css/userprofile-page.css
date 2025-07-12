@@ -1,0 +1,12 @@
+﻿.card-main {
+    margin: 2%;
+}
+
+.user-profile {
+    display: flex;
+    margin: 1%;
+}
+
+.left-part, .right-part {
+    flex: 1;
+}

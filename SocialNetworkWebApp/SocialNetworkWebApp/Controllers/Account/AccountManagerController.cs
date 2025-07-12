@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetworkWebApp.Models.Users;
 using SocialNetworkWebApp.ViewModels.Account;
+using SocialNetworkWebApp.ViewModels.AccountManager;
 
 namespace SocialNetworkWebApp.Controllers.Account
 {
@@ -57,7 +58,8 @@ namespace SocialNetworkWebApp.Controllers.Account
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        //return RedirectToAction("User", "AccountManager");
+                        return View("Views/AccountManager/User.cshtml", new UserViewModel(user));
                     }
                 }
                 else
