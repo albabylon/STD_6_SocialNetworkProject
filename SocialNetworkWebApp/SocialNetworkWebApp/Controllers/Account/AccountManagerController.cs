@@ -98,14 +98,16 @@ namespace SocialNetworkWebApp.Controllers.Account
             var user = User;
 
             var result = await _userManager.GetUserAsync(user);
-
+            
             if (result == null)
             {
                 ModelState.AddModelError("", "Пользователь не найден");
                 return View("Views/Home/Index.cshtml");
             }
 
-            return View("Edit", new UserViewModel(result));
+            var editUser = _mapper.Map<UserEditViewModel>(result);
+
+            return View("Edit", editUser);
         }
 
         [Route("Update")]
@@ -117,7 +119,7 @@ namespace SocialNetworkWebApp.Controllers.Account
             {
                 var user = await _userManager.FindByIdAsync(model.UserId);
 
-                user.Convert(model);
+                user.Convert(model); //через маппер нельзя, так как не обновить конкретного пользователя
 
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
