@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetworkWebApp.Models.Users;
+using SocialNetworkWebApp.ViewModels;
 using SocialNetworkWebApp.ViewModels.Account;
 using SocialNetworkWebApp.ViewModels.AccountManager;
 
@@ -105,6 +106,34 @@ namespace SocialNetworkWebApp.Controllers.Account
             }
 
             return View("Edit", new UserViewModel(result));
+        }
+
+        [Route("Update")]
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Update(UserEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+
+                user.Convert(model);
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("MyPage", "AccountManager");
+                }
+                else
+                {
+                    return RedirectToAction("Edit", "AccountManager");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Некорректные данные");
+                return View("Edit", model);
+            }
         }
 
         [Route("Logout")]
