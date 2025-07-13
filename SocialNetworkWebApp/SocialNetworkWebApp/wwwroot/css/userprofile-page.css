@@ -10,3 +10,8 @@
 .left-part, .right-part {
     flex: 1;
 }
+
+.user-profile-edit {
+    margin: 4%;
+    padding: 4%;
+}

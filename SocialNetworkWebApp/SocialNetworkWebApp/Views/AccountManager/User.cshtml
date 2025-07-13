@@ -8,13 +8,14 @@
     <div class="user-profile row g-0" bis_skin_checked="1">
         <div class="col-5 col-sm-4 left-part" bis_skin_checked="1">
             <img src="http://pngimg.com/uploads/husky/husky_PNG19.png" class="img-fluid w-100" alt="card-horizontal-image">
-            <a href="@Url.Action("Edit", "User")" class="btn btn-primary w-100">Редактировать</a>
+            <a href="@Url.Action("Edit", "AccountManager")" class="btn btn-primary w-100">Редактировать</a>
         </div>
         <div class="col-7 col-sm-8 right-part" bis_skin_checked="1">
             <div class="card-body" bis_skin_checked="1">
                 <div class="user-name">
                     <h1 class="h2">@Model.User.GetFullName()</h1>
                 </div>
+                <hr />
                 <div class="user-profile-info">
                     <div class="user-profile-info-main">
                         <div class="status mb-3">
@@ -29,16 +30,18 @@
                             <strong>О себе:</strong>
                             <div class="">@Model.User.About</div>
                         </div>
-                        <div class="email mb-5">
+                        <div class="email mb-3">
                             <strong>Email:</strong>
                             <a href="mailto:@Model.User.Email">@Model.User.Email</a>
                         </div>
                     </div>
+                    <hr />
                     <div class="user-profile-friends">
                         <h2 class="h5 mb-3">Список друзей</h2>
                         <div>Саша</div>
                         <div>Вася</div>
                     </div>
+                    <hr />
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetworkWebApp.Models.Users;
@@ -58,8 +59,8 @@ namespace SocialNetworkWebApp.Controllers.Account
                     }
                     else
                     {
-                        //return RedirectToAction("User", "AccountManager");
-                        return View("Views/AccountManager/User.cshtml", new UserViewModel(user));
+                        return RedirectToAction("MyPage", "AccountManager");
+                        //return View("Views/AccountManager/User.cshtml", new UserViewModel(user));
                     }
                 }
                 else
@@ -67,7 +68,43 @@ namespace SocialNetworkWebApp.Controllers.Account
                     ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                 }
             }
-            return View("Views/Home/Index");
+            return View("Views/Home/Index.cshtml", new MainViewModel());
+        }
+
+        [Route("MyPage")]
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> MyPage()
+        {
+            var user = User;
+
+            var result = await _userManager.GetUserAsync(user);
+
+            if (result == null)
+            {
+                ModelState.AddModelError("", "Пользователь не найден");
+                return View("Views/Home/Index.cshtml");
+            }
+
+            return View("User", new UserViewModel(result));
+        }
+
+        [Route("Edit")]
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit()
+        {
+            var user = User;
+
+            var result = await _userManager.GetUserAsync(user);
+
+            if (result == null)
+            {
+                ModelState.AddModelError("", "Пользователь не найден");
+                return View("Views/Home/Index.cshtml");
+            }
+
+            return View("Edit", new UserViewModel(result));
         }
 
         [Route("Logout")]

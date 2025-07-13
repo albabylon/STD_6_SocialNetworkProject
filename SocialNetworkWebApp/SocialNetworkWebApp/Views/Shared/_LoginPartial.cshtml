@@ -3,7 +3,11 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-@if (SignInManager.IsSignedIn(User))
-{
-	<a asp-area="" asp-controller="AccountManager" asp-action="Logout">Выход</a>
-}
+<div class="right-align">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <form method="post" asp-controller="AccountManager" asp-action="Logout">
+            <input class="enter_submit" type="submit" value="Выход" />
+        </form>
+    }
+</div>
