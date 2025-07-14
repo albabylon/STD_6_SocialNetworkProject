@@ -1,9 +1,9 @@
-﻿@using Microsoft.AspNetCore.Identity;
+﻿@model SocialNetworkWebApp.ViewModels.Account.MainViewModel;
+
+@using Microsoft.AspNetCore.Identity;
 @using SocialNetworkWebApp.Models.Users;
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager;
-
-@model SocialNetworkWebApp.ViewModels.Account.MainViewModel;
 
 @{
     ViewData["Title"] = "Home Page";

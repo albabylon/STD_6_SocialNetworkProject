@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SocialNetworkWebApp.Data.Repository;
+using SocialNetworkWebApp.Data.UoW;
 using SocialNetworkWebApp.Models.Users;
 using SocialNetworkWebApp.ViewModels;
 using SocialNetworkWebApp.ViewModels.Account;
@@ -14,12 +17,14 @@ namespace SocialNetworkWebApp.Controllers.Account
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AccountManagerController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountManagerController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
+            _unitOfWork = unitOfWork;
         }
 
         [Route("Login")]
@@ -138,6 +143,26 @@ namespace SocialNetworkWebApp.Controllers.Account
             }
         }
 
+        [Route("UserList")]
+        [HttpPost]
+        public async Task<IActionResult> UserList(string search)
+        {
+            //var model = new SearchViewModel
+            //{
+            //нужен AsEnumerable() чтобы запрос вытянул в память
+            //UserList = _userManager.Users.AsEnumerable().Where(x => x.GetFullName().Contains(search)).ToList()
+
+            //если много данных, то лучше на строне сервера
+            //UserList = _userManager.Users.AsEnumerable().Where(x => (x.FirstName + " " + x.MiddleName + " " + x.LastName)
+            //.ToLower().Contains(search.ToLower())).ToList()
+            //};
+
+            //return View("UserList", model);
+
+            var model = await CreateSearch(search);
+            return View("UserList", model);
+        }
+
         [Route("Logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -145,6 +170,43 @@ namespace SocialNetworkWebApp.Controllers.Account
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+
+        private async Task<SearchViewModel> CreateSearch(string search)
+        {
+            var currentuser = User;
+
+            var result = await _userManager.GetUserAsync(currentuser);
+
+            var list = _userManager.Users.AsEnumerable().Where(x => x.GetFullName().Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            var withfriend = await GetAllFriend();
+
+            var data = new List<UserWithFriendExt>();
+            list.ForEach(x =>
+            {
+                var t = _mapper.Map<UserWithFriendExt>(x);
+                t.IsFriendWithCurrent = withfriend.Where(y => y.Id == x.Id || x.Id == result.Id).Any();
+                data.Add(t);
+            });
+
+            var model = new SearchViewModel()
+            {
+                UserList = data
+            };
+
+            return model;
+        }
+
+        private async Task<List<User>> GetAllFriend()
+        {
+            var user = User;
+
+            var result = await _userManager.GetUserAsync(user);
+
+            var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
+
+            return repository.GetFriendsByUser(result);
         }
     }
 }
