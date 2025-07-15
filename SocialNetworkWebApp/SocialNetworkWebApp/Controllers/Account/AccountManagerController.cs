@@ -27,6 +27,7 @@ namespace SocialNetworkWebApp.Controllers.Account
             _unitOfWork = unitOfWork;
         }
 
+        #region Вход
         [Route("Login")]
         [HttpGet]
         public IActionResult Login()
@@ -76,7 +77,9 @@ namespace SocialNetworkWebApp.Controllers.Account
             }
             return View("Views/Home/Index.cshtml", new MainViewModel());
         }
+        #endregion
 
+        #region Моя Страница
         [Route("MyPage")]
         [HttpGet]
         [Authorize]
@@ -92,7 +95,11 @@ namespace SocialNetworkWebApp.Controllers.Account
                 return View("Views/Home/Index.cshtml");
             }
 
-            return View("User", new UserViewModel(result));
+            var model = new UserViewModel(result);
+
+            model.Friends = await GetAllFriend(model.User);
+
+            return View("User", model);
         }
 
         [Route("Edit")]
@@ -142,7 +149,9 @@ namespace SocialNetworkWebApp.Controllers.Account
                 return View("Edit", model);
             }
         }
+        #endregion
 
+        #region Друзья
         [Route("UserList")]
         [HttpPost]
         public async Task<IActionResult> UserList(string search)
@@ -153,7 +162,7 @@ namespace SocialNetworkWebApp.Controllers.Account
             //UserList = _userManager.Users.AsEnumerable().Where(x => x.GetFullName().Contains(search)).ToList()
 
             //если много данных, то лучше на строне сервера
-            //UserList = _userManager.Users.AsEnumerable().Where(x => (x.FirstName + " " + x.MiddleName + " " + x.LastName)
+            //UserList = _userManager.Users.Where(x => (x.FirstName + " " + x.MiddleName + " " + x.LastName)
             //.ToLower().Contains(search.ToLower())).ToList()
             //};
 
@@ -163,6 +172,38 @@ namespace SocialNetworkWebApp.Controllers.Account
             return View("UserList", model);
         }
 
+        [Route("AddFriend")]
+        [HttpPost]
+        public async Task<IActionResult> AddFriend(string id)
+        {
+            var currentuser = User;
+            var result = await _userManager.GetUserAsync(currentuser);
+            var friend = await _userManager.FindByIdAsync(id);
+
+            var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
+
+            await repository.AddFriend(result, friend);
+
+            return RedirectToAction("MyPage", "AccountManager");
+        }
+
+        [Route("DeleteFriend")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteFriend(string id)
+        {
+            var currentuser = User;
+            var result = await _userManager.GetUserAsync(currentuser);
+            var friend = await _userManager.FindByIdAsync(id);
+
+            var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
+
+            await repository.DeleteFriend(result, friend);
+
+            return RedirectToAction("MyPage", "AccountManager");
+        }
+        #endregion
+
+        #region Выход
         [Route("Logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -171,6 +212,8 @@ namespace SocialNetworkWebApp.Controllers.Account
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        #endregion
+
 
 
         private async Task<SearchViewModel> CreateSearch(string search)
@@ -206,7 +249,14 @@ namespace SocialNetworkWebApp.Controllers.Account
 
             var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
 
-            return repository.GetFriendsByUser(result);
+            return await repository.GetFriendsByUser(result);
+        }
+
+        private async Task<List<User>> GetAllFriend(User user)
+        {
+            var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
+
+            return await repository.GetFriendsByUser(user);
         }
     }
 }

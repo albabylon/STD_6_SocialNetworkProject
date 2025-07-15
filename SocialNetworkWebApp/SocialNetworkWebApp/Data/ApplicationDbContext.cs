@@ -11,13 +11,14 @@ namespace SocialNetworkWebApp.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
             if (!Database.GetService<IRelationalDatabaseCreator>().Exists())
             {
                 Database.EnsureCreated();
             }
             else
             {
-                Database.Migrate();
+                //Database.Migrate();
             }
         }
 
@@ -25,13 +26,7 @@ namespace SocialNetworkWebApp.Data
         {
             base.OnModelCreating(builder);
 
-            builder.ApplyConfiguration<Friend>(new FriendConfiguration());
-
-            builder.Entity<Friend>()
-                .HasOne(x => x.User)
-                .WithMany()
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.ApplyConfiguration(new FriendConfiguration());
         }
     }
 }

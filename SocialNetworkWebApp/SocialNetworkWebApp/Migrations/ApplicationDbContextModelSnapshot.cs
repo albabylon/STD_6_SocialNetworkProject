@@ -327,13 +327,13 @@ namespace SocialNetworkWebApp.Migrations
                     b.HasOne("SocialNetworkWebApp.Models.Users.User", "CurrentFriend")
                         .WithMany()
                         .HasForeignKey("CurrentFriendId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SocialNetworkWebApp.Models.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CurrentFriend");

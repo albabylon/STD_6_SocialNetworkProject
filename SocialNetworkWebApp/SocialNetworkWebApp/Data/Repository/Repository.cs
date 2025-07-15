@@ -1,49 +1,52 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace SocialNetworkWebApp.Data.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected DbContext _db;
+        protected DbContext _context;
 
         public DbSet<T> Set { get; private set; }
 
         public Repository(ApplicationDbContext db)
         {
-            _db = db;
-            var set = _db.Set<T>();
-            set.Load();
+            _context = db;
+            var set = _context.Set<T>();
+            set.LoadAsync();
 
             Set = set;
         }
 
-        public void Create(T item)
+        public async Task Create(T item)
         {
             Set.Add(item);
-            _db.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(T item)
+        public async Task Delete(T item)
         {
             Set.Remove(item);
-            _db.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public T Get(int id)
+        public async Task<T> Get(int id)
         {
-            return Set.Find(id);
+            var result = await Set.FindAsync(id);
+
+            return result ?? throw new Exception($"{id} не найден");
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return Set;
+            return await Set.ToListAsync();
         }
 
-        public void Update(T item)
+        public async Task Update(T item)
         {
             Set.Update(item);
-            _db.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -12,8 +12,8 @@ using SocialNetworkWebApp.Data;
 namespace SocialNetworkWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250712085224_UserUpdate")]
-    partial class UserUpdate
+    [Migration("20250715185523_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,6 +158,31 @@ namespace SocialNetworkWebApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SocialNetworkWebApp.Models.Users.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CurrentFriendId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrentFriendId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFriends", (string)null);
+                });
+
             modelBuilder.Entity("SocialNetworkWebApp.Models.Users.User", b =>
                 {
                     b.Property<string>("Id")
@@ -298,6 +323,25 @@ namespace SocialNetworkWebApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SocialNetworkWebApp.Models.Users.Friend", b =>
+                {
+                    b.HasOne("SocialNetworkWebApp.Models.Users.User", "CurrentFriend")
+                        .WithMany()
+                        .HasForeignKey("CurrentFriendId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SocialNetworkWebApp.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("CurrentFriend");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

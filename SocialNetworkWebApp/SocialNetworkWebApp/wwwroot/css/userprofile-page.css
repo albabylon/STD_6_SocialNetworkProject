@@ -15,3 +15,21 @@
     margin: 4%;
     padding: 4%;
 }
+
+.user-profile-friends {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.center-align {
+    align-content: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ava {
+    width: 20%;
+    max-width: max-content;
+}
