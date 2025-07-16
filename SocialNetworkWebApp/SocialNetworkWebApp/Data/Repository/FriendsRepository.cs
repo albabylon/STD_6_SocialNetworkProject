@@ -32,17 +32,19 @@ namespace SocialNetworkWebApp.Data.Repository
         {
             //Include для того, чтобы при получении списка сущностей получить все данные.
             //Это «жадная загрузка» (eager loading) в явном виде, сделано это так, потому что нам нужно явно передать именно список друзей, а не только при обращении.
-            return await Set
+            var result = await Set
                 .Include(x => x.CurrentFriend)
                 .Include(x => x.User)
                 .Where(x => x.User.Id == target.Id)
                 .Select(x => x.CurrentFriend)
                 .ToListAsync();
+
+            return result;
         }
 
         public async Task DeleteFriend(User target, User Friend)
         {
-            var friends = Set.AsEnumerable().FirstOrDefault(x => x.UserId == target.Id && x.CurrentFriendId == Friend.Id);
+            var friends = await Set.FirstOrDefaultAsync(x => x.UserId == target.Id && x.CurrentFriendId == Friend.Id);
 
             if (friends != null)
             {

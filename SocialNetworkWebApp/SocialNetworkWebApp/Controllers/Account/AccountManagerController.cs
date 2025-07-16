@@ -156,19 +156,8 @@ namespace SocialNetworkWebApp.Controllers.Account
         [HttpPost]
         public async Task<IActionResult> UserList(string search)
         {
-            //var model = new SearchViewModel
-            //{
-            //нужен AsEnumerable() чтобы запрос вытянул в память
-            //UserList = _userManager.Users.AsEnumerable().Where(x => x.GetFullName().Contains(search)).ToList()
-
-            //если много данных, то лучше на строне сервера
-            //UserList = _userManager.Users.Where(x => (x.FirstName + " " + x.MiddleName + " " + x.LastName)
-            //.ToLower().Contains(search.ToLower())).ToList()
-            //};
-
-            //return View("UserList", model);
-
             var model = await CreateSearch(search);
+
             return View("UserList", model);
         }
 
@@ -222,7 +211,10 @@ namespace SocialNetworkWebApp.Controllers.Account
 
             var result = await _userManager.GetUserAsync(currentuser);
 
-            var list = _userManager.Users.AsEnumerable().Where(x => x.GetFullName().Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            var list = await _userManager.Users
+                .Where(x => x.GetFullName().Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                .ToListAsync();
+
             var withfriend = await GetAllFriend();
 
             var data = new List<UserWithFriendExt>();

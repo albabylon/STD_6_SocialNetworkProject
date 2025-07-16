@@ -1,6 +1,8 @@
 ﻿
 .topnav {
-    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
     .topnav a {
@@ -23,8 +25,10 @@
             color: white;
         }
 
-    .topnav .search-container {
-        float: right;
+    .topnav, .align-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .topnav input[type=text] {

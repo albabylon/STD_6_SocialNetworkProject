@@ -12,7 +12,9 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    //редирект
+    <script>
+        window.location.href = '@Url.Action("MyPage", "AccountManager")';
+    </script>
 }
 else
 {
