@@ -192,6 +192,70 @@ namespace SocialNetworkWebApp.Controllers.Account
         }
         #endregion
 
+        #region Чат
+        [Route("Chat")]
+        [HttpPost]
+        public async Task<IActionResult> Chat(string id)
+        {
+            var currentuser = User;
+
+            var sender = await _userManager.GetUserAsync(currentuser);
+            var recepient = await _userManager.FindByIdAsync(id);
+
+            var repository = _unitOfWork.GetRepository<Message>() as MessageRepository;
+            var mess = await repository.GetMessages(sender, recepient);
+
+            var model = new ChatViewModel()
+            {
+                Sender = sender,
+                Recepient = recepient,
+                MessageHistory = mess.OrderBy(x => x.Id).ToList(),
+            };
+
+            return View("Chat", model);
+        }
+
+        [Route("Chat")]
+        [HttpGet]
+        public async Task<IActionResult> Chat()
+        {
+            var id = Request.Query["id"];
+            var model = await GenerateChat(id);
+            
+            return View("Chat", model);
+        }
+
+        [Route("NewMessage")]
+        [HttpPost]
+        public async Task<IActionResult> NewMessage(string id, ChatViewModel chat)
+        {
+            var currentuser = User;
+
+            var sender = await _userManager.GetUserAsync(currentuser);
+            var recepient = await _userManager.FindByIdAsync(id);
+
+            var repository = _unitOfWork.GetRepository<Message>() as MessageRepository;
+            var item = new Message()
+            {
+                Sender = sender,
+                Recipient = recepient,
+                Text = chat.NewMessage.Text,
+            };
+            await repository.Create(item);
+
+            var mess = await repository.GetMessages(sender, recepient);
+
+            var model = new ChatViewModel()
+            {
+                Sender = sender,
+                Recepient = recepient,
+                MessageHistory = mess.OrderBy(x => x.Id).ToList(),
+            };
+
+            return View("Chat", model);
+        }
+        #endregion
+
         #region Выход
         [Route("Logout")]
         [HttpPost]
@@ -254,6 +318,26 @@ namespace SocialNetworkWebApp.Controllers.Account
             var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
 
             return await repository.GetFriendsByUser(user);
+        }
+
+        private async Task<ChatViewModel> GenerateChat(string id)
+        {
+            var currentuser = User;
+
+            var sender = await _userManager.GetUserAsync(currentuser);
+            var recepient = await _userManager.FindByIdAsync(id);
+
+            var repository = _unitOfWork.GetRepository<Message>() as MessageRepository;
+            var mess = await repository.GetMessages(sender, recepient);
+
+            var model = new ChatViewModel()
+            {
+                Sender = sender,
+                Recepient = recepient,
+                MessageHistory = mess.OrderBy(x => x.Id).ToList(),
+            };
+
+            return model;
         }
     }
 }
