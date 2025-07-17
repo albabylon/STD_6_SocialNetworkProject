@@ -7,6 +7,5 @@ namespace SocialNetworkWebApp.Data.UoW
         int SaveChanges(bool ensureAutoHistory = false);
 
         IRepository<TEntity> GetRepository<TEntity>(bool hasCustomRepository = true) where TEntity : class;
-
     }
 }

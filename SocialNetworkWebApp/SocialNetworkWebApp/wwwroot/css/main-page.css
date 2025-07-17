@@ -31,6 +31,10 @@
     background-color: white;
 }
 
+.right-align {
+    display: inline-flex;
+}
+
 .btn_submit {
     background-color: #04AA6D;
     color: white;

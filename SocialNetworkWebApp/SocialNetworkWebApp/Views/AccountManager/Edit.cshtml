@@ -1,0 +1,53 @@
+﻿@model SocialNetworkWebApp.ViewModels.AccountManager.UserEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="user-profile-edit card" bis_skin_checked="1">
+    <div>
+        <h1 class="h2 text-center mb-3">Редактирование пользователя</h1>
+    </div>
+    <form class="frm" method="post" asp-controller="AccountManager" asp-action="Update">
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="text" class="form-control" id="floatingInput" asp-for="UserId" readonly>
+            <label for="floatingInput">Id</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="text" class="form-control" id="floatingInput" asp-for="FirstName" placeholder="Имя">
+            <label for="floatingInput">Имя</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="text" class="form-control" id="floatingInput" asp-for="LastName" placeholder="Фамилия">
+            <label for="floatingInput">Фамилия</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="text" class="form-control" id="floatingInput" asp-for="MiddleName" placeholder="Отчество">
+            <label for="floatingInput">Отчество</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="date" class="form-control" id="floatingInput" asp-for="BirthDate">
+            <label for="floatingInput">Дата рождения</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="email" class="form-control" id="floatingInput" asp-for="Email" placeholder="test@example.com">
+            <label for="floatingInput">Email</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="url" class="form-control" id="floatingInput" asp-for="Image">
+            <label for="floatingInput">Аватар</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="text" class="form-control" id="floatingInput" asp-for="Status">
+            <label for="floatingInput">Статус</label>
+        </div>
+        <div class="form-floating mb-3" bis_skin_checked="1">
+            <input type="text" class="form-control" id="floatingInput" asp-for="About">
+            <label for="floatingInput">О себе</label>
+        </div>
+
+        <div class="center">
+            <input class="btn_submit" type="submit" value="Сохранить" />
+        </div>
+    </form>
+</div>

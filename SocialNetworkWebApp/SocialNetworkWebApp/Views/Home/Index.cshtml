@@ -1,19 +1,34 @@
 ﻿@model SocialNetworkWebApp.ViewModels.Account.MainViewModel;
 
+@using Microsoft.AspNetCore.Identity;
+@using SocialNetworkWebApp.Models.Users;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager;
+
 @{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="side">
-        <div class="center">
-            Пользуйтесь нашей самой крутой соцсетью! Регистрируйтесь всего за 2 минуты, делитесь мыслями, находите новых друзей.
+@if (SignInManager.IsSignedIn(User))
+{
+    <script>
+        window.location.href = '@Url.Action("MyPage", "AccountManager")';
+    </script>
+}
+else
+{
+    <div class="row">
+        <div class="side">
+            <div class="center">
+                Пользуйтесь нашей самой крутой соцсетью! Регистрируйтесь всего за 2 минуты, делитесь мыслями, находите новых друзей.
+            </div>
+            <img class="main-img" src="http://pngimg.com/uploads/husky/husky_PNG19.png" />
         </div>
-        <img class="main-img" src="http://pngimg.com/uploads/husky/husky_PNG19.png" />
-    </div>
 
-    <div class="main">
-        <partial name="Login" model="Model.LoginView" />
-        <partial name="Register" model="Model.RegisterView" />
+        <div class="main">
+            <partial name="Login" model="Model.LoginView" />
+            <partial name="Register" model="Model.RegisterView" />
+        </div>
     </div>
-</div>
+}

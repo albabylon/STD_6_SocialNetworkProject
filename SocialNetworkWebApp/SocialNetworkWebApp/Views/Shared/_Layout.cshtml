@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main-page.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/base-styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/userprofile-page.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SocialNetworkWebApp.styles.css" asp-append-version="true" />
 </head>
 <body class="background-main">
@@ -15,8 +16,10 @@
             <div class="container">
                 <div class="topnav">
                     <a asp-area="" asp-controller="Home" asp-action="Index">SocialNetwork</a>
-                    <partial name="_SearchLayoutPartial" />
-                    <partial name="_LoginPartial" />
+                    <div class="align-right">
+                        <partial name="_SearchLayoutPartial" />
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
     </header>
