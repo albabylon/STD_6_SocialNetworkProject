@@ -6,15 +6,11 @@ namespace SocialNetworkWebApp.Data.Repository
     {
         protected DbContext _context;
 
-        public DbSet<T> Set { get; private set; }
+        public DbSet<T> Set => _context.Set<T>();
 
         public Repository(ApplicationDbContext db)
         {
             _context = db;
-            var set = _context.Set<T>();
-            set.LoadAsync();
-
-            Set = set;
         }
 
         public async Task Create(T item)
