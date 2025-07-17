@@ -211,8 +211,9 @@ namespace SocialNetworkWebApp.Controllers.Account
 
             var result = await _userManager.GetUserAsync(currentuser);
 
+            var searchLower = search.ToLower();
             var list = await _userManager.Users
-                .Where(x => x.GetFullName().Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                .Where(x => (x.FirstName + " " + x.MiddleName + " " + x.LastName).ToLower().Contains(searchLower))
                 .ToListAsync();
 
             var withfriend = await GetAllFriend();
@@ -233,7 +234,7 @@ namespace SocialNetworkWebApp.Controllers.Account
             return model;
         }
 
-        private async Task<List<User>> GetAllFriend()
+        private async Task<IEnumerable<User>> GetAllFriend()
         {
             var user = User;
 
@@ -244,7 +245,7 @@ namespace SocialNetworkWebApp.Controllers.Account
             return await repository.GetFriendsByUser(result);
         }
 
-        private async Task<List<User>> GetAllFriend(User user)
+        private async Task<IEnumerable<User>> GetAllFriend(User user)
         {
             var repository = _unitOfWork.GetRepository<Friend>() as FriendsRepository;
 

@@ -6,7 +6,7 @@ namespace SocialNetworkWebApp.ViewModels.AccountManager
     {
         public User User { get; set; }
 
-        public List<User> Friends { get; set; }
+        public IEnumerable<User> Friends { get; set; }
 
         public UserViewModel(User user)
         {
