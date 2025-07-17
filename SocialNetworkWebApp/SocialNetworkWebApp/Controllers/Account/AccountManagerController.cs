@@ -211,15 +211,19 @@ namespace SocialNetworkWebApp.Controllers.Account
 
             var result = await _userManager.GetUserAsync(currentuser);
 
-            var searchLower = search.ToLower();
-            var list = await _userManager.Users
-                .Where(x => (x.FirstName + " " + x.MiddleName + " " + x.LastName).ToLower().Contains(searchLower))
-                .ToListAsync();
+            var usersBySearch = new List<User>();
+
+            if (string.IsNullOrEmpty(search))
+                usersBySearch = await _userManager.Users.ToListAsync();
+            else
+                usersBySearch = await _userManager.Users
+                    .Where(x => (x.FirstName + " " + x.MiddleName + " " + x.LastName).ToLower().Contains(search.ToLower()))
+                    .ToListAsync();
 
             var withfriend = await GetAllFriend();
 
             var data = new List<UserWithFriendExt>();
-            list.ForEach(x =>
+            usersBySearch.ForEach(x =>
             {
                 var t = _mapper.Map<UserWithFriendExt>(x);
                 t.IsFriendWithCurrent = withfriend.Where(y => y.Id == x.Id || x.Id == result.Id).Any();

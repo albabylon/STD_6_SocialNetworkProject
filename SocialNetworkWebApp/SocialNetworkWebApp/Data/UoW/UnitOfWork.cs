@@ -21,27 +21,27 @@ namespace SocialNetworkWebApp.Data.UoW
 
         public IRepository<TEntity> GetRepository<TEntity>(bool hasCustomRepository = true) where TEntity : class
         {
-            //_repositories ??= new Dictionary<Type, object>();
+            _repositories ??= new Dictionary<Type, object>();
 
-            //if (hasCustomRepository)
-            //{
-            //    var customRepo = _appContext.GetService<IRepository<TEntity>>();
-            //    if (customRepo != null)
-            //    {
-            //        return customRepo;
-            //    }
-            //}
+            if (hasCustomRepository)
+            {
+                var customRepo = _appContext.GetService<IRepository<TEntity>>();
+                if (customRepo != null)
+                {
+                    return customRepo;
+                }
+            }
 
-            //var type = typeof(TEntity);
-            //if (!_repositories.ContainsKey(type))
-            //{
-            //    _repositories[type] = new Repository<TEntity>(_appContext);
-            //}
+            var type = typeof(TEntity);
+            if (!_repositories.ContainsKey(type))
+            {
+                _repositories[type] = new Repository<TEntity>(_appContext);
+            }
 
-            //return (IRepository<TEntity>)_repositories[type];
-            return hasCustomRepository
-                ? _appContext.GetService<IRepository<TEntity>>()
-                : new Repository<TEntity>(_appContext);
+            return (IRepository<TEntity>)_repositories[type];
+            //return hasCustomRepository
+            //    ? _appContext.GetService<IRepository<TEntity>>()
+            //    : new Repository<TEntity>(_appContext);
         }
 
         public int SaveChanges(bool ensureAutoHistory = false)
