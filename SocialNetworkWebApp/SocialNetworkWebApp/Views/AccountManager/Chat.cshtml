@@ -3,26 +3,31 @@
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
 
-<meta http-equiv="refresh" content="5"> @* обновления каждые 5 сек, временное решение, нужно использовать SignalR *@
+@*<meta http-equiv="refresh" content="5">  обновления каждые 5 сек, временное решение, нужно использовать SignalR *@
 
 <div class="block-reg background-white">
-    <div>
+    <div class="d-flex flex-row bd-highlight">
         <form method="get" asp-controller="AccountManager" asp-action="MyPage">
-            <input class="enter_submit" type="submit" value="Назад" />
+            <button class="btn btn-secondary bi-arrow-left-circle-fill" type="submit"> Назад</button>
         </form>
+        <h4 class="center">Чат @Model.Sender.FirstName и  @Model.Recepient.FirstName</h4>
     </div>
-
-    <h4 class="center">Чат @Model.Sender.FirstName и  @Model.Recepient.FirstName</h4>
-
+    <hr />
     <div class="lined-block">
-        <label class="gray-text">Сообщения</label>
-        @if (Model.MessageHistory.Count != 0)
+        <label class="gray-text mb-3 fw-bold">Сообщения</label>
+        @if (Model.MessageHistory.Any())
         {
-
             @foreach (var message in @Model.MessageHistory)
             {
                 <div>
-                    <label> @message.Sender.FirstName:</label>
+                    @if (Model.Sender.Id == message.SenderId)
+                    {
+                        <label class="badge bg-success text-wrap">@message.Sender.FirstName</label>
+                    }
+                    else 
+                    {
+                        <label class="badge bg-primary text-wrap">@message.Sender.FirstName</label>
+                    }
                     @message.Text
                 </div>
             }
@@ -34,17 +39,17 @@
             </div>
         }
     </div>
-
+    <hr />
     <div class="lined-block">
-        <label class="gray-text">Новое сообщение</label>
+        <label class="gray-text fw-bold">Новое сообщение</label>
         <form class="frm" method="post" asp-controller="AccountManager" asp-action="NewMessage"  asp-route-id="@Model.Recepient.Id">
             <div asp-validation-summary="ModelOnly"></div>
-            <div>
-                <div class="mrgn">
-                    <input asp-for="NewMessage.Text" class="form-control emojify" type="text"/>
+            <div class="d-flex flex-row bd-highlight">
+                <div>
+                    <input asp-for="NewMessage.Text" class="form-control emojify" type="text" autocomplete="off" />
                 </div>
-                <div class="center">
-                    <input class="btn_submit" type="submit" value="Отправить" />
+                <div>
+                    <button class="btn btn-success bi-send" type="submit"> Отправить</button>
                 </div>
             </div>
         </form>
