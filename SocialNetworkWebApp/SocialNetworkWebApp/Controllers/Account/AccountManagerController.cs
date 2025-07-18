@@ -267,7 +267,26 @@ namespace SocialNetworkWebApp.Controllers.Account
         }
         #endregion
 
+        #region Generate.Test
+        [Route("Generate")]
+        [HttpGet]
+        public async Task<IActionResult> Generate()
+        {
 
+            var usergen = new GenetateUsers();
+            var userlist = usergen.Populate(35);
+
+            foreach (var user in userlist)
+            {
+                var result = await _userManager.CreateAsync(user, "123456");
+
+                if (!result.Succeeded)
+                    continue;
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+        #endregion
 
         private async Task<SearchViewModel> CreateSearch(string search)
         {
