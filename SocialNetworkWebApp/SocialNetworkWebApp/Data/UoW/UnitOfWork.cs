@@ -39,6 +39,7 @@ namespace SocialNetworkWebApp.Data.UoW
             }
 
             return (IRepository<TEntity>)_repositories[type];
+            
             //return hasCustomRepository
             //    ? _appContext.GetService<IRepository<TEntity>>()
             //    : new Repository<TEntity>(_appContext);

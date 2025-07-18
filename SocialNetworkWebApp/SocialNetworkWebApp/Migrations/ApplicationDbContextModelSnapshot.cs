@@ -180,6 +180,35 @@ namespace SocialNetworkWebApp.Migrations
                     b.ToTable("UserFriends", (string)null);
                 });
 
+            modelBuilder.Entity("SocialNetworkWebApp.Models.Users.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages", (string)null);
+                });
+
             modelBuilder.Entity("SocialNetworkWebApp.Models.Users.User", b =>
                 {
                     b.Property<string>("Id")
@@ -339,6 +368,25 @@ namespace SocialNetworkWebApp.Migrations
                     b.Navigation("CurrentFriend");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SocialNetworkWebApp.Models.Users.Message", b =>
+                {
+                    b.HasOne("SocialNetworkWebApp.Models.Users.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SocialNetworkWebApp.Models.Users.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
                 });
 #pragma warning restore 612, 618
         }

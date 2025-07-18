@@ -23,6 +23,7 @@ builder.Services
     .AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connection))
     .AddUnitOfWork()
     .AddCustomRepository<Friend, FriendsRepository>()
+    .AddCustomRepository<Message, MessageRepository>()
     .AddIdentity<User, IdentityRole>(option => 
     {
         option.Password.RequiredLength = 5;

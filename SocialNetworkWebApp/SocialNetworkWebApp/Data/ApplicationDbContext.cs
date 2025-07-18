@@ -11,15 +11,15 @@ namespace SocialNetworkWebApp.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
-            //if (!Database.GetService<IRelationalDatabaseCreator>().Exists())
-            //{
+ 
+            if (!Database.GetService<IRelationalDatabaseCreator>().Exists())
+            {
                 Database.EnsureCreated();
-            //}
-            //else
-            //{
-            //    Database.Migrate();
-            //}
+            }
+            else
+            {
+                Database.Migrate();
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -27,6 +27,7 @@ namespace SocialNetworkWebApp.Data
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new FriendConfiguration());
+            builder.ApplyConfiguration(new MessageConfuiguration());
         }
     }
 }
