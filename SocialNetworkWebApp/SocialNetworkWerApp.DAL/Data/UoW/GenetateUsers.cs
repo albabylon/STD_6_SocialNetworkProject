@@ -1,4 +1,6 @@
 ﻿using SocialNetworkWebApp.Models.Users;
+using System;
+using System.Collections.Generic;
 
 namespace SocialNetworkWebApp.Data.UoW
 {

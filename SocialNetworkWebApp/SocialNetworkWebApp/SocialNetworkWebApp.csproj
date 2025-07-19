@@ -17,4 +17,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SocialNetworkWerApp.DAL\SocialNetworkWerApp.DAL.csproj" />
+  </ItemGroup>
+
 </Project>

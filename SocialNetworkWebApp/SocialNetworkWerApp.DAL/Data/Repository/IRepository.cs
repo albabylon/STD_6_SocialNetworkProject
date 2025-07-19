@@ -1,4 +1,7 @@
-﻿namespace SocialNetworkWebApp.Data.Repository
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace SocialNetworkWebApp.Data.Repository
 {
     public interface IRepository<T> where T : class
     {

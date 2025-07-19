@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SocialNetworkWebApp;
 using SocialNetworkWebApp.Data;
 using SocialNetworkWebApp.Data.Repository;
 using SocialNetworkWebApp.Extentions;
@@ -23,7 +24,7 @@ builder.Services
     .AddUnitOfWork()
     .AddCustomRepository<Friend, FriendsRepository>()
     .AddCustomRepository<Message, MessageRepository>()
-    .AddIdentity<User, IdentityRole>(option => 
+    .AddIdentity<User, IdentityRole>(option =>
     {
         option.Password.RequiredLength = 5;
         option.Password.RequireNonAlphanumeric = false;
@@ -32,6 +33,8 @@ builder.Services
         option.Password.RequireDigit = false;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -67,5 +70,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+app.MapHub<ChatHub>("/NewMessage");
 
 app.Run();

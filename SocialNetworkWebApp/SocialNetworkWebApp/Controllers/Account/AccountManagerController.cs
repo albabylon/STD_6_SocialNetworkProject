@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkWebApp.Data.Repository;
 using SocialNetworkWebApp.Data.UoW;
@@ -18,13 +19,15 @@ namespace SocialNetworkWebApp.Controllers.Account
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public AccountManagerController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork)
+        public AccountManagerController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork, IHubContext<ChatHub> hubContext)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
+            _hubContext = hubContext;
         }
 
         #region Вход
@@ -242,6 +245,8 @@ namespace SocialNetworkWebApp.Controllers.Account
                 Text = chat.NewMessage.Text,
             };
             await repository.Create(item);
+
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", item.Sender, item.Text);
 
             var mess = await repository.GetMessages(sender, recepient);
 

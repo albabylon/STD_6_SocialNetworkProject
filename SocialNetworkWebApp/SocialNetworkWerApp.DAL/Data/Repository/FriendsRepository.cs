@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialNetworkWebApp.Models.Users;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SocialNetworkWebApp.Data.Repository
 {

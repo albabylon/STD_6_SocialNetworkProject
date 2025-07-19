@@ -2,6 +2,7 @@
 
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
 
 @*<meta http-equiv="refresh" content="5">  обновления каждые 5 сек, временное решение, нужно использовать SignalR *@
 
@@ -46,7 +47,7 @@
             <div asp-validation-summary="ModelOnly"></div>
             <div class="d-flex flex-row bd-highlight">
                 <div>
-                    <input asp-for="NewMessage.Text" class="form-control emojify" type="text" autocomplete="off" />
+                    <input asp-for="NewMessage.Text" class="form-control emojify" type="text" autocomplete="off"/>
                 </div>
                 <div>
                     <button class="btn btn-success bi-send" type="submit"> Отправить</button>
