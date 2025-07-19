@@ -8,8 +8,7 @@ using SocialNetworkWebApp.Models.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
-IConfiguration configuration = builder.Configuration;
-var connection = configuration.GetConnectionString("DefaultConnection");
+var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
 var mapperConfig = new MapperConfiguration((v) =>
